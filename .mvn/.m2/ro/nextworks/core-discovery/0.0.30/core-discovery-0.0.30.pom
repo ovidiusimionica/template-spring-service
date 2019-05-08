@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>ro.nextworks</groupId>
+    <artifactId>core-dependencies-parent</artifactId>
+    <version>1.0.12</version>
+    <relativePath />
+  </parent>
+  <artifactId>core-discovery</artifactId>
+  <version>0.0.30</version>
+  <name>Core Discovery Client library</name>
+  <description>Discovery Based on Zookeeper / Openshift</description>
+  <organization>
+    <name>Nextworks</name>
+  </organization>
+  <properties>
+    <main.basedir>.</main.basedir>
+    <mesos-client>0.6.0</mesos-client>
+    <!-- check with dependency:tree when changing the kubernetes version against conflicts with the openshift fabric8 library -->
+    <openshift-client.version>4.1.3</openshift-client.version>
+    <!-- end check -->
+    <netflix-feign.version>8.18.0</netflix-feign.version>
+    <jsr305.version>3.0.2</jsr305.version>
+    <!--<netflix-ribbon.version>2.3.0</netflix-ribbon.version>-->
+  </properties>
+  <scm>
+    <connection>${project.scm.connection}/core-discovery.git</connection>
+    <tag>core-discovery-0.0.30</tag>
+  </scm>
+  <dependencies>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-zookeeper</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-zookeeper-config</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-zookeeper-config</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>io.netty</groupId>
+          <artifactId>netty-transport-native-epoll</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- Minishift Discovery-->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-kubernetes</artifactId>
+    </dependency>
+    <!-- Minishift Config-->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-kubernetes-config</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+    </dependency>
+
+    <!-- javax.annotation dependency for Defect tracking to make compiler lint happy-->
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <version>${jsr305.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.mesosphere</groupId>
+      <artifactId>marathon-client</artifactId>
+      <version>${mesos-client}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-simple</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.netflix.feign</groupId>
+      <artifactId>feign-ribbon</artifactId>
+      <version>${netflix-feign.version}</version>
+    </dependency>
+    <!-- This dependency adds some custom openshift endpoint managers in addition to kubernetes -->
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>openshift-client</artifactId>
+      <version>${openshift-client.version}</version>
+    </dependency>
+
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <repositories>
+    <repository>
+      <id>spring-milestones</id>
+      <name>Spring Milestones</name>
+      <url>https://repo.spring.io/milestone</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>corprepo-releases</id>
+      <name>Corporate Releases</name>
+       <url>${project.repo.releaseurl}</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>corprepo-snapshots</id>
+      <name>Corporate Snapshots</name>
+      <url>${project.repo.snapshoturl}</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>corprepo-releases</id>
+      <name>Corporate Repository</name>
+      <url>${project.repo.releaseurl}</url>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>corprepo-snapshots</id>
+      <name>Corporate Snapshots</name>
+      <url>${project.repo.snapshoturl}</url>
+    </snapshotRepository>
+  </distributionManagement>
+  <profiles>
+    <profile>
+      <id>java8</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <properties>
+        <project.scm.id>git</project.scm.id>
+        <project.scm.connection>scm:git:https://github.com/stuff</project.scm.connection>
+	<project.repo.snapshoturl>http://localhost:8081/repository/maven-snapshots</project.repo.snapshoturl>
+	<project.repo.releaseurl>http://localhost:8081/repository/maven-releases</project.repo.releaseurl>
+      </properties>
+    </profile>
+  </profiles>
+</project>

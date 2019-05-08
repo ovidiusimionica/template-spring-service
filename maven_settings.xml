@@ -1,0 +1,11 @@
+<settings>
+  <proxies>
+    <!-- Specification for one proxy, to be used in connecting to the network. -->
+  </proxies>
+  <servers>
+    <!-- This server.id matches Corporate Repo  group -->
+  </servers>
+  <mirrors>
+  </mirrors>
+
+</settings>

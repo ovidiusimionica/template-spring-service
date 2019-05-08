@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    kubernetes:
+      config:
+        sources:
+          - name: splunk-server
+---
+spring:
+  profiles: devops
+
+  cloud:
+    zookeeper:
+      enabled: true
+      connect-string: zk.devops:2181
+      discovery:
+        root: /bootservices

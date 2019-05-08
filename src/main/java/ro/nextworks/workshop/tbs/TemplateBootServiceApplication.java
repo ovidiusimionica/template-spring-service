@@ -1,0 +1,20 @@
+package ro.nextworks.workshop.tbs;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+
+/**
+ * Boot Starting Main.
+ */
+@SpringBootApplication
+@EnableConfigurationProperties
+@EnableDiscoveryClient
+public class TemplateBootServiceApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(TemplateBootServiceApplication.class, args);
+  }
+}

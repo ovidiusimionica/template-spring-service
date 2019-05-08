@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>ro.nextworks</groupId>
+    <artifactId>core-app-parent</artifactId>
+    <version>0.0.30</version>
+    <relativePath />
+  </parent>
+
+  <artifactId>template-spring-service</artifactId>
+  <version>0.0.8-SNAPSHOT</version>
+  <name>template-spring-service</name>
+  <description>Template Spring Boot Service</description>
+  <packaging>jar</packaging>
+  <organization>
+    <name>Nextworks</name>
+  </organization>
+
+  <scm>
+    <connection>${project.scm.connection}/template-spring-service.git</connection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <dependencies>
+    <!-- include optionally swagger in case you build REST interfaces -->
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger-ui</artifactId>
+    </dependency>
+  </dependencies>
+
+  <repositories>
+    <repository>
+      <id>spring-milestones</id>
+      <name>Spring Milestones</name>
+      <url>https://repo.spring.io/milestone</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>corprepo-releases</id>
+      <name>Corporate Releases</name>
+      <url>${project.repo.releaseurl}</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>corprepo-snapshots</id>
+      <name>Corporate Snapshots</name>
+      <url>${project.repo.snapshoturl}</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>corprepo-releases</id>
+      <name>Corporate Repository</name>
+      <url>${project.repo.releaseurl}</url>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>true</uniqueVersion>
+      <id>corprepo-snapshots</id>
+      <name>Corporate Snapshots</name>
+      <url>${project.repo.snapshoturl}</url>
+    </snapshotRepository>
+  </distributionManagement>
+</project>

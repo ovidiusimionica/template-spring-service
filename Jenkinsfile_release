@@ -1,0 +1,74 @@
+@Library('SMA-Jenskins-Library') _
+
+pipeline {
+  agent any
+  tools {
+     maven 'maven'
+  }
+  environment {
+    app = ''
+    pom = ''
+    version = ''
+    docker_registry = "${env.DOCKER_REGISTRY_RELEASE}"
+    docker_registry_url = "${env.DOCKER_REGISTRY_URL}"
+    docker_registry_credentials_id = "${env.DOCKER_REGISTRY_CREDENTIALS_ID_RELEASE}"
+    docker_image = "template-spring-service"
+    sonar = 'sonar'
+    m2_settings = "${env.M2_SETTINGS_PATH}"
+  }
+
+  stages {
+    stage('Initialize') {
+      steps {
+        checkout scm
+        sh "java -version"
+
+        script {
+          pom = readMavenPom file: 'pom.xml'
+          version = pom.version.replace('-SNAPSHOT', '')
+        }
+      }
+    }
+
+    stage('Build & Package Java') {
+      steps {
+        withSonarQubeEnv(sonar) {
+          sh "mvn -s" + m2_settings + " clean org.jacoco:jacoco-maven-plugin:prepare-agent package -Dmaven.test.failure.ignore=false sonar:sonar"
+        }
+      }
+    }
+
+    stage('Release') {
+      steps {
+        sh "git config user.email " + jenkins_email+ " && git config user.name Jenkins"
+        sh "mvn -s" + m2_settings + " -Dresume=false release:prepare release:perform"
+      }
+    }
+
+    stage('Build Docker') {
+      steps {
+        script {
+            app = docker.build(docker_registry + "/" + docker_image , " --pull=true --build-arg DOCKER_REGISTRY_MIRROR=${env.DOCKER_REGISTRY_MIRROR} --build-arg build_version=" + version +" ${env.WORKSPACE}")
+        }
+      }
+    }
+
+    stage('Publish Docker') {
+      steps {
+        script {
+          docker.withRegistry(docker_registry_url, docker_registry_credentials_id) {
+            app.push(version)
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    always{
+      junit testResults: '**/target/surefire-reports/TEST-*.xml', allowEmptyResults: true
+      jacoco exclusionPattern: '**/*Test*.class', execPattern: '**/jacoco.exec', inclusionPattern: '**/*.class'
+      sendStatusEmail audience: "${JENKINS_NOTIFICATIONS_EMAIL}", changeLogSets: currentBuild.changeSets, buildStatus: currentBuild.currentResult
+    }
+  }
+}
