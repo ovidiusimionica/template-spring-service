@@ -2,6 +2,7 @@ target/
 bin/
 /config
 /out
+.mvn/
 *~
 
 ### STS ###

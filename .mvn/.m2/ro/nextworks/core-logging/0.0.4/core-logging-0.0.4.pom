@@ -76,7 +76,7 @@
     <repository>
       <id>spring-plugins</id>
       <name>Spring Plugins</name>
-      <url>http://repo.spring.io/plugins-release</url>
+      <url>https://nexus.pentaho.org/repository/proxy-public-3rd-party-release</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>

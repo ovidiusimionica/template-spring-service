@@ -1,5 +1,4 @@
-ARG  DOCKER_REGISTRY_MIRROR=
-FROM ${DOCKER_REGISTRY_MIRROR}openjdk:8-jre
+FROM openjdk:8-jre
 
 MAINTAINER ovidiu.simionica
 
